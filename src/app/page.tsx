@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Auth from "./auth";
 import { saveTasks, loadTasks, syncTasks } from "./storage";
 
@@ -27,8 +26,6 @@ export default function Home() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [title, setTitle] = useState("");
   const [filter, setFilter] = useState<"all" | "active" | "completed">("all");
-  const [sortBy, setSortBy] = useState<"createdAt" | "dueDate" | "priority">("createdAt");
-  const [searchQuery, setSearchQuery] = useState("");
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   // タスクの読み込み
@@ -45,14 +42,6 @@ export default function Home() {
       saveTasks(tasks);
     }
   }, [tasks, isLoggedIn]);
-
-  // タスクの同期
-  const handleSync = async () => {
-    if (isLoggedIn) {
-      const syncedTasks = await syncTasks(tasks);
-      setTasks(syncedTasks);
-    }
-  };
 
   // ダークモード切り替え
   const toggleDarkMode = () => {
