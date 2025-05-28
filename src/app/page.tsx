@@ -1,8 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Auth from "./auth";
-import { saveTasks, loadTasks, syncTasks } from "./storage";
-
+import { saveTasks, loadTasks } from "./storage";
 // タスク型の定義
 interface Task {
   id: number;
