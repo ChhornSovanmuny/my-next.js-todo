@@ -2,15 +2,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Task } from '@/app/types';
 
 // DifyのAPIエンドポイントとAPIキー
-const DIFY_API_URL = process.env.DIFY_API_URL || 'https://api.dify.ai/v1';
-const DIFY_API_KEY = process.env.DIFY_API_KEY;
+const DIFY_API_URL = 'https://api.dify.ai/v1';
+const DIFY_API_KEY = 'app-urixaevfHSUVW2Qr7rv4UPf9';
 
 // Difyとの通信を行う関数
 async function communicateWithDify(message: string, tasks: Task[]) {
-  if (!DIFY_API_KEY) {
-    throw new Error('Dify APIキーが設定されていません');
-  }
-
   try {
     const response = await fetch(`${DIFY_API_URL}/chat-messages`, {
       method: 'POST',
@@ -23,7 +19,7 @@ async function communicateWithDify(message: string, tasks: Task[]) {
           tasks: JSON.stringify(tasks)
         },
         query: message,
-        response_mode: 'streaming',
+        response_mode: 'blocking',
         user: 'user'
       })
     });
@@ -32,7 +28,8 @@ async function communicateWithDify(message: string, tasks: Task[]) {
       throw new Error(`Dify API error: ${response.statusText}`);
     }
 
-    return response;
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.error('Dify API error:', error);
     throw error;
@@ -52,9 +49,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const response = await communicateWithDify(message, tasks);
-    const data = await response.json();
-
+    const data = await communicateWithDify(message, tasks);
     return NextResponse.json(data);
   } catch (error) {
     console.error('Error in Dify route:', error);
