@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Task } from '@/app/types';
 
-// DifyのAPIエンドポイントとAPIキー
-const DIFY_API_URL = 'https://api.dify.ai/v1';
-const DIFY_API_KEY = 'app-urixaevfHSUVW2Qr7rv4UPf9';
+// DifyのAPIエンドポイントとAPIキー（環境変数を利用）
+const DIFY_API_URL = process.env.DIFY_API_URL || 'https://api.dify.ai/v1';
+const DIFY_API_KEY = process.env.DIFY_API_KEY;
 
 // Difyとの通信を行う関数
 async function communicateWithDify(message: string, tasks: Task[]) {
+  if (!DIFY_API_KEY) {
+    throw new Error('Dify APIキーが設定されていません');
+  }
   try {
     const response = await fetch(`${DIFY_API_URL}/chat-messages`, {
       method: 'POST',
