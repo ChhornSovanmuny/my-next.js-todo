@@ -23,16 +23,27 @@ let tasks: Task[] = [
   }
 ];
 
+// サンプルのタスクデータ
+const sampleTasks = [
+  {
+    id: '1',
+    title: 'サンプルタスク1',
+    description: 'これはサンプルのタスクです',
+    isPriority: false,
+    dueDate: null
+  },
+  {
+    id: '2',
+    title: 'サンプルタスク2',
+    description: '締切が近いタスク',
+    isPriority: true,
+    dueDate: '2024-06-30T23:59:59Z'
+  }
+];
+
 // GET: タスクの取得
 export async function GET() {
-  try {
-    return NextResponse.json(tasks);
-  } catch {
-    return NextResponse.json(
-      { error: 'タスクの取得に失敗しました' },
-      { status: 500 }
-    );
-  }
+  return NextResponse.json(sampleTasks);
 }
 
 // POST: 新しいタスクの作成
