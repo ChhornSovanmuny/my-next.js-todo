@@ -24,10 +24,10 @@ let tasks: Task[] = [
 ];
 
 // GET: タスクの取得
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     return NextResponse.json(tasks);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'タスクの取得に失敗しました' },
       { status: 500 }
@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
     };
     tasks.push(newTask);
     return NextResponse.json(newTask, { status: 201 });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'タスクの作成に失敗しました' },
       { status: 500 }
@@ -79,7 +79,7 @@ export async function PUT(request: NextRequest) {
     };
 
     return NextResponse.json(tasks[taskIndex]);
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'タスクの更新に失敗しました' },
       { status: 500 }
@@ -110,10 +110,10 @@ export async function DELETE(request: NextRequest) {
 
     tasks = tasks.filter(task => task.id !== taskId);
     return NextResponse.json({ message: 'タスクを削除しました' });
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
       { error: 'タスクの削除に失敗しました' },
       { status: 500 }
     );
   }
-} 
+}
