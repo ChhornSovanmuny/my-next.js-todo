@@ -6,10 +6,7 @@ const nextConfig = {
   },
   // Amplifyでのデプロイ時に必要な設定
   experimental: {
-    // サーバーコンポーネントを有効化
-    serverComponents: true,
-    // アプリケーションのルーティングを有効化
-    appDir: true,
+    // 最新のNext.jsでは不要になった設定を削除
   },
 }
 
