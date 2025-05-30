@@ -1,8 +1,6 @@
 // src/app/dify/page.tsx
 'use client';
 
-import { useState } from "react";
-
 export default function DifyPage() {
   return (
     <div className="min-h-screen bg-gray-100 p-4">
