@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Task } from '../types';
 
 interface Message {
   role: 'user' | 'assistant';
