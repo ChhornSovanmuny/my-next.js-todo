@@ -1,0 +1,46 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Todo API",
+    "version": "1.0.0",
+    "description": "API for retrieving todo tasks."
+  },
+  "paths": {
+    "/api/tasks": {
+      "get": {
+        "summary": "Get all tasks",
+        "description": "Returns a list of all tasks.",
+        "responses": {
+          "200": {
+            "description": "A list of tasks.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Task"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Task": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "description": { "type": "string" },
+          "isPriority": { "type": "boolean" },
+          "dueDate": { "type": ["string", "null"], "format": "date-time" }
+        },
+        "required": ["id", "title", "description", "isPriority", "dueDate"]
+      }
+    }
+  }
+} 
