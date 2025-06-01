@@ -3,13 +3,63 @@
   "info": {
     "title": "Todo API",
     "version": "1.0.0",
-    "description": "API for retrieving todo tasks."
+    "description": "API for managing todo tasks and Dify integration."
   },
   "paths": {
     "/api/tasks": {
       "get": {
         "summary": "Get all tasks",
-        "description": "Returns a list of all tasks.",
+        "description": "Returns a list of all tasks with optional search parameters and sorting options.",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "description": "Search term to filter tasks by title or description",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "isPriority",
+            "in": "query",
+            "description": "Filter tasks by priority status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "completed",
+            "in": "query",
+            "description": "Filter tasks by completion status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "sortBy",
+            "in": "query",
+            "description": "Field to sort tasks by (createdAt, dueDate, title, isPriority)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["createdAt", "dueDate", "title", "isPriority"]
+            }
+          },
+          {
+            "name": "sortOrder",
+            "in": "query",
+            "description": "Sort order (asc or desc)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"],
+              "default": "desc"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "A list of tasks.",
@@ -25,6 +75,209 @@
             }
           }
         }
+      },
+      "post": {
+        "summary": "Create a new task",
+        "description": "Creates a new task with the provided details.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "isPriority": { "type": "boolean" },
+                  "dueDate": { "type": "string", "format": "date-time" }
+                },
+                "required": ["title"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a task",
+        "description": "Updates an existing task.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "number" },
+                  "title": { "type": "string" },
+                  "description": { "type": "string" },
+                  "completed": { "type": "boolean" },
+                  "isPriority": { "type": "boolean" },
+                  "dueDate": { "type": "string", "format": "date-time" }
+                },
+                "required": ["id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Task updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Task"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a task",
+        "description": "Deletes a task by ID.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Task deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Task not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/dify": {
+      "post": {
+        "summary": "Communicate with Dify",
+        "description": "Sends a message to Dify and receives a response.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "message": { "type": "string" },
+                  "tasks": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/Task"
+                    }
+                  }
+                },
+                "required": ["message"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response from Dify",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "answer": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
@@ -33,13 +286,15 @@
       "Task": {
         "type": "object",
         "properties": {
-          "id": { "type": "string" },
+          "id": { "type": "number" },
           "title": { "type": "string" },
           "description": { "type": "string" },
+          "completed": { "type": "boolean" },
+          "createdAt": { "type": "string", "format": "date-time" },
           "isPriority": { "type": "boolean" },
           "dueDate": { "type": ["string", "null"], "format": "date-time" }
         },
-        "required": ["id", "title", "description", "isPriority", "dueDate"]
+        "required": ["id", "title", "description", "completed", "createdAt", "isPriority", "dueDate"]
       }
     }
   }
