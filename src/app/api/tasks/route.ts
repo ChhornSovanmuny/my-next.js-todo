@@ -43,7 +43,10 @@ const sampleTasks = [
 
 // GET: タスクの取得
 export async function GET() {
-  return NextResponse.json(sampleTasks);
+  return new NextResponse(
+    JSON.stringify(sampleTasks),
+    { headers: { 'Content-Type': 'application/json' } }
+  );
 }
 
 // POST: 新しいタスクの作成
