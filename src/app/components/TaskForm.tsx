@@ -18,12 +18,13 @@ export default function TaskForm({ onAddTask, isDarkMode }: TaskFormProps) {
     if (!title.trim()) return;
 
     const newTask: Task = {
-      id: Date.now().toString(),
+      id: Date.now(),
       title: title.trim(),
       description: description.trim(),
       completed: false,
       createdAt: new Date().toISOString(),
-      dueDate: dueDate || null
+      dueDate: dueDate || null,
+      isPriority: false
     };
 
     onAddTask(newTask);
