@@ -1,18 +1,25 @@
 import { Task } from "./types";
 
-// ローカルストレージのキー
-const TASKS_KEY = "tasks";
+const STORAGE_KEY = "todo-tasks";
 
-// タスクの保存
-export const saveTasks = (tasks: Task[]): void => {
-  localStorage.setItem(TASKS_KEY, JSON.stringify(tasks));
-};
+export function saveTasks(tasks: Task[]): void {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  } catch (error) {
+    console.error("Failed to save tasks:", error);
+    throw new Error("タスクの保存に失敗しました");
+  }
+}
 
-// タスクの読み込み
-export const loadTasks = (): Task[] => {
-  const tasksJson = localStorage.getItem(TASKS_KEY);
-  return tasksJson ? JSON.parse(tasksJson) : [];
-};
+export function loadTasks(): Task[] {
+  try {
+    const tasks = localStorage.getItem(STORAGE_KEY);
+    return tasks ? JSON.parse(tasks) : [];
+  } catch (error) {
+    console.error("Failed to load tasks:", error);
+    throw new Error("タスクの読み込みに失敗しました");
+  }
+}
 
 // タスクの同期（複数デバイス間）
 export const syncTasks = async (tasks: Task[]): Promise<Task[]> => {
