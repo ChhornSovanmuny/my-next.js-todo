@@ -14,13 +14,13 @@ export default function TasksPage() {
     setTasks([...tasks, task]);
   };
 
-  const toggleTask = (id: string) => {
+  const toggleTask = (id: number) => {
     setTasks(tasks.map(task =>
       task.id === id ? { ...task, completed: !task.completed } : task
     ));
   };
 
-  const deleteTask = (id: string) => {
+  const deleteTask = (id: number) => {
     setTasks(tasks.filter(task => task.id !== id));
   };
 

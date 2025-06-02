@@ -1,13 +1,15 @@
+'use client';
+
 import { Task } from "../types";
 
 interface TaskCardProps {
   task: Task;
+  onToggle: (id: number) => void;
   onDelete: (id: number) => void;
-  onToggleComplete: (id: number) => void;
   isDarkMode: boolean;
 }
 
-export default function TaskCard({ task, onDelete, onToggleComplete, isDarkMode }: TaskCardProps) {
+export default function TaskCard({ task, onToggle, onDelete, isDarkMode }: TaskCardProps) {
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString('ja-JP', {
       year: 'numeric',
@@ -30,7 +32,7 @@ export default function TaskCard({ task, onDelete, onToggleComplete, isDarkMode 
         <input
           type="checkbox"
           checked={task.completed}
-          onChange={() => onToggleComplete(task.id)}
+          onChange={() => onToggle(task.id)}
           className="mt-1 h-4 w-4 rounded border-gray-300 text-blue-500 focus:ring-blue-500"
         />
         <div className="flex-1">
